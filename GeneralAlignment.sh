@@ -51,7 +51,7 @@ STAR=$starExecutable
 STARparCommon=" --genomeDir $STARgenomeDir --readFilesIn $read1 $read2 --outSAMunmapped Within --outSAMmapqUnique 60 \
 	--outSAMattributes NH HI AS NM MD --outFilterMultimapNmax 20 --outFilterMismatchNmax 999 --outFileNamePrefix ./$sname \
 	--alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 --sjdbGTFfile $annotation \
-	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save"
+	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroups"
 
 # STAR parameters: by read length
 case "$readLength" in
@@ -124,18 +124,6 @@ unstr_SE|unstr_PE)
 	;;
 esac
 
-case "$fqType" in
-readgroup)
-	readGroups=`cat $readGroups`
-	STARoutSAMattrRGline="--outSAMattrRGline $readGroups"
-	;;
-pairs)
-	readGroups=`cat $readGroups | head -1 | cut -f 2-`
-	STARoutSAMattrRGline="--outSAMattrRGline $readGroups"
-	;;
-esac
-
-
 case "$outBamType" in
 sorted)
 	STARparBAM="--outSAMtype BAM SortedByCoordinate" 
@@ -144,9 +132,6 @@ unsorted)
 	STARparBAM="--outSAMtype BAM Unsorted"
 	;;
 esac
-	
-
-
 
 # Metadata BAM comments
 echo -e '@CO\tREFID:Homo_sapiens_assembly19
