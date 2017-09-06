@@ -3,13 +3,12 @@
 
 # STAR mapping pipeline (can be used for both 1-pass and all-sample 2-pass runs by including the junctions from 1-pass run)
 # usage: from an empty working directory, run
-# ./STAR.sh (read1) (read2 or "") (STARgenomeDir) (dataType) (nThreadsSTAR) (sampleName) (readLength) (annotationFile) (readGroupAndOtherCommentsFile) (readFilesCommand) (junctionsFrom1Pass)
+# ./STAR.sh (file with read1\tread2) (STARgenomeDir) (dataType) (nThreadsSTAR) (sampleName) (readLength) (annotationFile) (list of read group lines) (readFilesCommand) (junctionsFrom1Pass)
 
+#files of fastq files read1\tread2
 read1=$1 
-#fastq file for read1
 read2=$2 
-#fastq file for read1, use "" if single-end
-STARgenomeDir=$3 
+STARgenomeDir=$3
 dataType=$4 
 #RNA-seq type, possible values: str_SE str_PE unstr_SE unstr_PE
 nThreadsSTAR=$5 
@@ -21,6 +20,8 @@ readLength=$7
 annotation=$8 
 #annotation file, use "-" if no annotation, annotations not needed if used at the genome generation step
 readGroups=$9
+readGroupString=$(cat $readGroups | tr "\n" "," | sed 's/,/ , /')
+
 #file of read groups
 zipped=${10} 
 # yes for gzipped fastq files, no for unzipped
@@ -51,7 +52,7 @@ STAR=$starExecutable
 STARparCommon=" --genomeDir $STARgenomeDir --readFilesIn $read1 $read2 --outSAMunmapped Within --outSAMmapqUnique 60 \
 	--outSAMattributes NH HI AS NM MD --outFilterMultimapNmax 20 --outFilterMismatchNmax 999 --outFileNamePrefix ./$sname \
 	--alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 --sjdbGTFfile $annotation \
-	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroups"
+	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroupString"
 
 # STAR parameters: by read length
 case "$readLength" in
@@ -145,5 +146,5 @@ STARparsMeta="--outSAMheaderCommentFile comments.txt --outSAMheaderHD @HD VN:1.4
 STARoutQuant="--quantMode GeneCounts"
 
 ###### STAR command
-echo "$STAR $STARparCommon $STARparZip $STARparReadLength $STARparRun $STARparBAM $STARparStrand $STARparsMeta $STARoutSAMattrRGline"
-$STAR $STARparCommon $STARparZip $STARparReadLength $STARparRun $STARparBAM $STARparStrand $STARparsMeta $STARoutSAMattrRGline $STARoutQuant
+echo "$STAR $STARparCommon $STARparZip $STARparReadLength $STARparRun $STARparBAM $STARparStrand $STARparsMeta $STARoutQuant"
+$STAR $STARparCommon $STARparZip $STARparReadLength $STARparRun $STARparBAM $STARparStrand $STARparsMeta $STARoutQuant
