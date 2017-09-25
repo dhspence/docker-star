@@ -20,9 +20,7 @@ readLength=$7
 annotation=$8 
 #annotation file, use "-" if no annotation, annotations not needed if used at the genome generation step
 readGroups=$9
-readGroupString=$(cat $readGroups | tr "\n" "," | sed 's/,/ , /')
-
-#file of read groups
+#read group string 
 zipped=${10} 
 # yes for gzipped fastq files, no for unzipped
 j=${11} 
@@ -52,7 +50,7 @@ STAR=$starExecutable
 STARparCommon=" --genomeDir $STARgenomeDir --readFilesIn $read1 $read2 --outSAMunmapped Within --outSAMmapqUnique 60 \
 	--outSAMattributes NH HI AS NM MD --outFilterMultimapNmax 20 --outFilterMismatchNmax 999 --outFileNamePrefix ./$sname \
 	--alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 --sjdbGTFfile $annotation \
-	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroupString"
+	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroups"
 
 # STAR parameters: by read length
 case "$readLength" in
