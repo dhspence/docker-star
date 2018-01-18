@@ -49,6 +49,7 @@ STAR=$starExecutable
 # STAR parameters: common for all runs
 STARparCommon=" --genomeDir $STARgenomeDir --readFilesIn $read1 $read2 --outSAMunmapped Within --outSAMmapqUnique 60 \
 	--outSAMattributes NH HI AS NM MD --outFilterMultimapNmax 20 --outFilterMismatchNmax 999 --outFileNamePrefix ./$sname \
+	--chimSegmentMin 12 --chimSegmentReadGapMax parameter 3 --alignSJstitchMismatchNmax 5 -1 5 5 \
 	--alignIntronMin 20 --alignIntronMax 1000000 --alignMatesGapMax 1000000 --sjdbGTFfile $annotation \
 	--sjdbFileChrStartEnd $junctions --limitSjdbInsertNsj 3000000 --sjdbInsertSave $save --outSAMattrRGline $readGroups"
 
