@@ -22,3 +22,15 @@ RUN make STAR
 ENV PATH /usr/local/STAR/source:$PATH
 WORKDIR /
 
+RUN cpan install DB_File && \
+   cpan install URI::Escape && \
+   cpan install Set::IntervalTree && \
+   cpan install Carp::Assert && \
+   cpan install JSON::XS && \
+   cpan install PerlIO::gzip && \
+
+WORKDIR /usr/local/
+RUN git clone --recursive https://github.com/STAR-Fusion/STAR-Fusion.git
+
+RUN ln -s /usr/local/STAR-Fusion/STAR-Fusion /usr/local/bin/
+
