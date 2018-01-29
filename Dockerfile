@@ -27,7 +27,7 @@ RUN cpan install DB_File && \
    cpan install Set::IntervalTree && \
    cpan install Carp::Assert && \
    cpan install JSON::XS && \
-   cpan install PerlIO::gzip && \
+   cpan install PerlIO::gzip
 
 WORKDIR /usr/local/
 RUN git clone --recursive https://github.com/STAR-Fusion/STAR-Fusion.git
